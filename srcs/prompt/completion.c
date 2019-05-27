@@ -6,7 +6,7 @@
 /*   By: aben-azz <aben-azz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/15 06:02:13 by aben-azz          #+#    #+#             */
-/*   Updated: 2019/05/25 08:25:03 by aben-azz         ###   ########.fr       */
+/*   Updated: 2019/05/27 05:40:50 by aben-azz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,10 +25,12 @@ int		init_autocomp(t_ab *autocomp)
 
 int		print_name(t_ab *autocomp, char *str, int i)
 {
+	dprintf(debug(), " euuh xd %d %d\n", i, autocomp->pos);
 	if (i == autocomp->pos)
 		ft_putstr("\x1b[7m");
 	ft_putstr(str);
-	ft_putstr("\x1b[0m");
+	if (i == autocomp->pos)
+		ft_putstr("\x1b[0m");
 	ft_move(g_shell->tcap, "!right", autocomp->max_offset - ft_strlen(str) + 2);
 	return (1);
 }
@@ -91,7 +93,7 @@ int		ft_tab(t_cap *tcap, t_ab *autocomp)
 	init_autocomp(autocomp);
 	i = 0;
 	col = -1;
-	tputs(tcap->down, 1, ft_put_termcaps);
+	ft_move(tcap, "down", 2);
 	while (++col < autocomp->col)
 	{
 		row = -1;
@@ -105,8 +107,8 @@ int		ft_tab(t_cap *tcap, t_ab *autocomp)
 		while (row--)
 			print_name(autocomp, autocomp->data[i].name, i) && i++;
 	}
-	ft_replace_cursor(tcap);
-	ft_move(tcap, "up", autocomp->col + (autocomp->carry > 0 ? 1 : +1));
+	//ft_replace_cursor(tcap);
+	ft_move(tcap, "up", autocomp->col + (autocomp->carry > 0 ? 1 : +1) + 1);
 	command = ft_strjoin(autocomp->match, g_shell->autocomp->data[g_shell->autocomp->pos].name);
 	ft_clear_replace(tcap);
 	ft_insert(command, tcap);
